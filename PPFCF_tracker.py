@@ -34,7 +34,7 @@ def send_telegram_message(message):
 
 
 class MutualFundTracker:
-    def __init__(self, portfolio_file, threshold=None):
+    def __init__(self, portfolio_file):
         """
         Initialize the tracker with a portfolio Excel file
         portfolio_file: Path to Excel file containing portfolio holdings
@@ -42,8 +42,8 @@ class MutualFundTracker:
         self.logger = self.setup_logger()
         self.portfolio = self.read_ppfas_portfolio(portfolio_file)
         self.ist_timezone = pytz.timezone('Asia/Kolkata')
-        self.threshold = threshold if threshold is not None else -2
-        
+        self.threshold = float(os.environ.get('RETURN_THRESHOLD'))
+
     def setup_logger(self):
         """Set up logging configuration"""
         logging.basicConfig(
@@ -276,6 +276,6 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     portfolio_file_path = os.path.join(script_dir, 'PPFCF_PPFAS_Monthly_Portfolio_Report_November_30_2024.xls')
 
-    tracker = MutualFundTracker(portfolio_file_path, threshold=-1)
+    tracker = MutualFundTracker(portfolio_file_path)
     tracker.monitor_portfolio()
 
