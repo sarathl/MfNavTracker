@@ -11,7 +11,7 @@ import sys
 def send_telegram_message(message):
     """Send message via Telegram"""
     token = os.environ.get('TELEGRAM_TOKEN')
-    chat_id = os.environ.get('TELOGRAM_CHAT_ID')
+    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 
     if not all([token, chat_id]):
         print("Telegram credentials not found in environment variables")
