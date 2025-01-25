@@ -40,11 +40,11 @@ class MutualFundTracker:
         portfolio_file: Path to Excel file containing portfolio holdings
         """
         self.logger = self.setup_logger()
-        self.portfolio = self.read_portfolio(portfolio_file)
         self.ist_timezone = pytz.timezone('Asia/Kolkata')
         self.threshold = float(os.environ.get('RETURN_THRESHOLD'))
         self.isin_col = 'isin'
         self.weight_col = 'weight'
+        self.portfolio = self.read_portfolio(portfolio_file)
 
     def setup_logger(self):
         """Set up logging configuration"""
