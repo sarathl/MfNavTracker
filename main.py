@@ -81,6 +81,9 @@ class MutualFundTracker:
         if not (self.isin_col in df.columns and self.weight_col in df.columns):
             missing_cols = [col for col in [self.isin_col, self.weight_col] if col not in df.columns]
             raise ValueError(f"Missing required column {missing_cols}")
+
+        # cleaning up the weights
+        df['weight'] = self.process_weights(df['weight'])
         return df
 
     def process_weights(self, weights_series):
