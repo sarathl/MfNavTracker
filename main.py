@@ -5,6 +5,7 @@ import pytz
 import logging
 import os
 import requests
+import sys
 
 
 def send_telegram_message(message):
@@ -34,14 +35,14 @@ def send_telegram_message(message):
 
 
 class MutualFundTracker:
-    def __init__(self, portfolio_file):
+    def __init__(self, portfolio_file, threshold):
         """
         Initialize the tracker with a portfolio Excel file
         portfolio_file: Path to Excel file containing portfolio holdings
         """
         self.logger = self.setup_logger()
         self.ist_timezone = pytz.timezone('Asia/Kolkata')
-        self.threshold = float(os.environ.get('RETURN_THRESHOLD'))
+        self.threshold = float(os.environ.get('RETURN_THRESHOLD', threshold))
         self.isin_col = 'isin'
         self.weight_col = 'weight'
         self.portfolio = self.read_portfolio(portfolio_file)
@@ -192,7 +193,17 @@ class MutualFundTracker:
 if __name__ == "__main__":
     # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    portfolio_file_path = os.path.join(script_dir, 'portfolio_files', 'PPFCF_portfolio.csv')
+    portfolio_file_path = ''
+    if len(sys.argv) > 1:
+        # Use command-line argument if provided
+        portfolio_file_path = sys.argv[1]
+    else:
+        # Default filename
+        portfolio_file_path = os.path.join(script_dir, 'portfolio_files', 'PPFCF_portfolio.csv')
 
-    tracker = MutualFundTracker(portfolio_file_path)
+    if len(sys.argv) > 2:
+        threshold = float(sys.argv[2])
+    else:
+        threshold = 0
+    tracker = MutualFundTracker(portfolio_file_path, threshold)
     tracker.monitor_portfolio()
